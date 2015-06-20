@@ -1,0 +1,109 @@
+#!/bin/sh
+#
+# Installation script for Rasbian Wheezy. The installation script can be
+# run after compiling the binaries.
+#
+# Installation:
+#
+# a) cd src; make
+# 
+# b) cd doc; ./mkbmp180d
+# 
+# c) sudo ./install (this script)
+#
+# d) sudo raspi-config (to enable I2C) 
+#
+# e) sudo service bmp180d start
+# 
+# f) tail -f /var/log/daemon.log
+#
+# g) sudo update-rc.d bmp180d defaults (optional)
+# 
+#
+# The directories used and files created by this script:
+#
+# /etc/init.d/bmp180d                - init script
+# /etc/bmp180d_config                - configuration file
+# /usr/share/man/man1/bmp180d.1      - manual page
+# /usr/sbin/bmp180d                  - pressure reading daemon
+# /var/lib/bmp180d/                  - live pressure data
+#
+# Fri Jun 12 23:33:59 CEST 2015
+# Edit: 
+# 
+# Jaakko Koivuniemi
+#
+
+
+# source directory for 'Bmp180d'
+SOURCEDIR=${PWD}
+SOURCEBIN=${SOURCEDIR}/src
+SOURCEMAN=${SOURCEDIR}/doc
+
+# binary executables 
+BINDIR=/usr/sbin
+
+# manual pages
+MANDIR=/usr/share/man/man1
+
+# init script
+INITDIR=/etc/init.d
+
+# for pipicpowerd_conf configuration file
+CONFDIR=/etc
+
+# live data 
+VARLIBDIR=/var/lib
+
+# binary executables
+BINS='bmp180d'
+
+if [ -d $SOURCEBIN ]; then
+  echo "Copy binary executables to ${BINDIR}"
+  for item in $BINS;
+  do
+    if [ -r ${SOURCEBIN}/${item} ]; then
+       echo "... ${item}"
+       /usr/bin/install -C -m 755 ${SOURCEBIN}/${item} ${BINDIR}
+    fi 
+  done
+else
+  echo "Source directory ${SOURCEBIN} does not exist"
+fi
+
+if [ -d $SOURCEMAN ]; then
+  echo "Copy manual pages to ${MANDIR}"
+  for item in $BINS;
+  do
+    if [ -r ${SOURCEMAN}/$item.1 ]; then
+       echo "... ${item}.1"
+       /usr/bin/install -C -m 664 ${SOURCEMAN}/${item}.1 ${MANDIR}
+    fi 
+  done
+else
+  echo "Source directory ${SOURCEMAN} does not exist"
+fi
+
+if [ ! -x ${INITDIR}/bmp180d ]; then
+  echo "Write init script ${INITDIR}/bmp180d"
+  /usr/bin/install -C -m 755 ${SOURCEDIR}/bmp180d.sh ${INITDIR} 
+  /bin/mv ${INITDIR}/bmp180d.sh ${INITDIR}/bmp180d 
+else
+  echo "Init script ${INITDIR}/bmp180d already exists"
+fi
+
+if [ ! -r ${CONFDIR}/bmp180d_config ]; then
+  echo "Write default configuration file ${CONFDIR}/bmp180d_config"
+  /usr/bin/install -C -m 664 ${SOURCEDIR}/bmp180d_config ${CONFDIR} 
+else
+  echo "Configuration file ${CONFDIR}/bmp180d_config already exists" 
+fi
+
+if [ -d /var/lib/bmp180d ]; then
+  echo "Directory /var/lib/bmp180d already exists"
+else
+  echo "Create directory /var/lib/bmp180d"
+  /bin/mkdir -m 775 /var/lib/bmp180d
+fi
+
+echo "Run 'update-rc.d bmp180d defaults' to automatically start at boot time"

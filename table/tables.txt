@@ -1,0 +1,15 @@
+
+SQLite local database storage
+-----------------------------
+
+Documentation from http://www.sqlite.org/
+
+create table bmp180(
+no integer primary key,
+ts timestamp default current_timestamp,
+name varchar(20),
+temperature real,
+pressure real,
+altitude real
+);
+

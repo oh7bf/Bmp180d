@@ -1,0 +1,18 @@
+#
+# Example configuration file for bmp180d 
+# Fri Jun 12 22:38:03 CEST 2015
+# Edit: 
+# 
+# Jaakko Koivuniemi
+
+# log level, see syslog(3) 
+# 2=critical condition, 3=error condition, 4=warning condition, 
+# 5=significant condition, 6=information, 7=debugging
+LOGLEVEL 5
+
+# store data to local SQLite database
+# DBSQLITE /tmp/test.db
+
+# pressure and temperature measurement interval [s]
+PRESINT 300
+

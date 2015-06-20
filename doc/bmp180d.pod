@@ -1,0 +1,53 @@
+=head1 NAME
+
+bmp180d - read pressure and temperature with i2c from BMP180
+
+=head1 SYNOPSIS
+
+B<bmp180d> 
+
+=head1 DESCRIPTION
+
+The B<bmp180d> is used to read temperature data from BMP180 on Raspberry Pi
+using i2c bus. The pressure and temperature are written to a file in directory 
+/var/lib/bmp180d/ and optionally inserted to local SQLite3 database table.
+
+The daemon is started with command 
+
+B<service> I<bmp180d> I<start>
+
+and can be stopped any time with
+
+B<service> I<bmp180d> I<stop>
+
+The operation of the daemon can be checked from the log file.
+
+=head1 FILES
+
+I</etc/bmp180d_config>             Configuration file. 
+
+I</etc/init.d/bmp180d>             Init script.
+
+I</usr/sbin/bmp180d>               Daemon code.
+
+I</var/lib/bmp180d/altitude>       Live altitude value.
+
+I</var/lib/bmp180d/pressure>       Live pressure value.
+
+I</var/lib/bmp180d/temperature>    Live temperature value.
+
+I</var/run/bmp180d.pid>            PID file.
+
+=head1 WARNING
+
+No check is done where the query data is written. Could make some hardware 
+unusable.
+
+=head1 AUTHORS
+
+Jaakko Koivuniemi 
+
+=head1 SEE ALSO
+
+i2cdetect(8), i2cset(8), i2cget(8), sqlite3(1)
+
